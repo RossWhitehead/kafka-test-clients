@@ -1,0 +1,15 @@
+{
+  "name": "kafka-test-clients",
+  "version": "1.0.0",
+  "description": "",
+  "main": "producer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ross Whitehead NBS",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-rdkafka": "^2.7.4"
+  }
+}
