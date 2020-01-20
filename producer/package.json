@@ -4,6 +4,7 @@
   "description": "",
   "main": "producer.js",
   "scripts": {
+    "start": "node producer.js"
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ross Whitehead NBS",
