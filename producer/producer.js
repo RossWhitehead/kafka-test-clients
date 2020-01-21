@@ -2,15 +2,32 @@
 
 const Kafka = require('node-rdkafka')
 require('dotenv').config()
+const express = require('express')
+const app = express()
 
 const {
 	BOOTSTRAP_SERVERS,
 	TOPIC,
 	PARTITIONS,
-	REPLICATION_FACTOR
+  REPLICATION_FACTOR,
+  PORT
 } = process.env
 
 const ERR_TOPIC_ALREADY_EXISTS = 36
+
+app.post('/produce', (req, res) => {
+  produceExample()
+    .then(() => {
+      res.send("10 messages produced")
+    })
+    .catch((err) => {
+      console.error(`Something went wrong:\n${err}`)
+      res.status(500)
+      res.send(`Something went wrong:\n${err}`)
+    })
+})
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
 
 function ensureTopicExists() {
   const adminClient = Kafka.AdminClient.create({
@@ -65,14 +82,11 @@ async function produceExample() {
       const {topic, partition, value} = report
       console.log(`Successfully produced record to topic "${topic}" partition ${partition} ${value}`)
     }
-  });
+  })
 
   for (let idx = 0; idx < 10; ++idx) {
     const key = 'ross'
     const value = Buffer.from(JSON.stringify({ count: idx }))
-
-    console.log(`Producing record ${key}\t${value}`)
-
     producer.produce(TOPIC, -1, value, key)
   }
 
@@ -80,10 +94,4 @@ async function produceExample() {
     producer.disconnect()
   })
 }
-
-produceExample()
-  .catch((err) => {
-    console.error(`Something went wrong:\n${err}`)
-    process.exit(1)
-  });
 
