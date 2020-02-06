@@ -26,10 +26,8 @@ function createConsumer(onData) {
 }
 
 async function consumerExample() {
-	console.log(`Consuming records from ${TOPIC}`)
-
 	let seen = 0
-
+	console.log(`\nCreating consumer ...`)
 	const consumer = await createConsumer(
 		({ key, value, partition, offset }) => {
 			console.log(
@@ -38,7 +36,9 @@ async function consumerExample() {
 		}
 	)
 
+	console.log(`\nSubscribing to ${TOPIC} ...`)
 	consumer.subscribe([TOPIC])
+	console.log(`\nConsuming ...`)
 	consumer.consume()
 
 	process.on('SIGINT', () => {
@@ -47,7 +47,11 @@ async function consumerExample() {
 	})
 }
 
-consumerExample().catch(err => {
+consumerExample()
+	.then(() => {
+		console.log(`\nConnected.`)
+	})
+  .catch (err => {
 	console.error(`Something went wrong:\n${err}`)
 	process.exit(1)
 })

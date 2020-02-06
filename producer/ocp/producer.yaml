@@ -1,0 +1,62 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: kafka-test-producer
+  namespace: rw-test
+spec:
+  host: kafka-test-producer-rw-test.apps.dev.blah.co.uk
+  subdomain: ''
+  to:
+    kind: Service
+    name: kafka-test-producer
+    weight: 100
+  port:
+    targetPort: 4000-tcp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-test-producer
+  namespace: rw-test
+spec:
+  selector:
+    app: kafka-test-producer
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-test-producer
+  namespace: rw-test
+  labels:
+    app: kafka-test-producer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka-test-producer
+  template:
+    metadata:
+      labels:
+        app: kafka-test-producer
+    spec:
+      containers:
+      - name: kafka-test-producer
+        image: rosswhitehead/kafka-test-producer:1.2.0
+        ports:
+        - containerPort: 4000
+          protocol: TCP
+        env:
+        - name: BOOTSTRAP_SERVERS
+          value: 'my-cluster-kafka-bootstrap.kafka-test.svc.cluster.local:9092'
+        - name: TOPIC
+          value: kafka_test_topic
+        - name: PARTITIONS
+          value: '1'
+        - name: REPLICATION_FACTOR
+          value: '1'
+        - name: PORT
+          value: '4000'

@@ -16,6 +16,8 @@ const {
 const ERR_TOPIC_ALREADY_EXISTS = 36
 
 app.post('/produce', (req, res) => {
+  const route = req.route
+  console.log({route})
   produceExample()
     .then(() => {
       res.send("10 messages produced")
