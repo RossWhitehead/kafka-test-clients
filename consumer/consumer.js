@@ -15,7 +15,9 @@ function createConsumer(onData) {
 			'group.id': 'node-example-group-1'
 		},
 		{
-			'auto.offset.reset': 'earliest'
+			'auto.offset.reset': 'earliest',
+			'enable.auto.commit': 'true',
+			'auto.commit.interval.ms': '1000'
 		}
 	)
 
